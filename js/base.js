@@ -11,6 +11,7 @@
         e.preventDefault();
         new_task.content = $(this).find('input[name=content]').val()
         new_task.date=new Date().getTime();
+        new_task.complate=false
         if (!new_task.content) return;
         if (add_task(new_task)) {
             $(this).find('input[name=content]').val('')
@@ -20,7 +21,24 @@
     $('.task-list').on('click', '.anchor.delete', function () {
         var data = $(this).parents('.task-item').data()
 
-        confirm('确定删除是否？') ? delete_task(data.index) : null
+        $.confirm({
+            theme:'supervan',
+            title:"确定是否删除?",
+            content:'是否删除日志',
+            closeIcon:true,
+            animation:'scale',
+            buttons:{
+                ok:{
+                    text:'确定',
+                    action:function () { 
+                        delete_task(data.index)
+                     }
+                },
+                cancel:{
+                    text:'取消'
+                }
+            }
+        })
     })
     $('.task-list').on('click', '.anchor.detail', function () {
         var data = $(this).parents('.task-item').data('index')
@@ -33,12 +51,20 @@
         var index=$(this).find('button').data('index');
         update_task(index,{textarea,date});  
     })
+    $('.task-list').on('click','.complete',function () { 
+        var index=$(this).data('index')
+        if($(this).is(':checked'))
+        {
+            task_list[index].complate=true;
+        }else{
+            task_list[index].complate=false;
+        }
+        refresh_task_list()
+     });
     $task_detail_mask.on('click', hide_task_detail)
     function update_task(index,data) { 
-        task_list[index]={
-            content:data.textarea,
-            date:data.date
-        }
+        task_list[index].content=data.textarea
+        task_list[index].date=new Date().getTime()
         refresh_task_list()
         hide_task_detail()
      }
@@ -54,6 +80,11 @@
     }
 
     function render_task_detail(index) {
+        var year=new Date(task_list[index].date).getFullYear();
+        var month=new Date(task_list[index].date).getMonth()+1;
+        var day=new Date(task_list[index].date).getDate();
+        var shi=new Date(task_list[index].date).getHours();
+        var fen=new Date(task_list[index].date).getMinutes(); 
         var tpl = `<form><div class="content">${task_list[index].content}</div>
         <div class="input-item">
             <div  class="desc">
@@ -61,12 +92,11 @@
             </div>
         </div>
         <div class="remind" class="input-item">
-            <input type="date" name="date">
+            <input class="datetime" type="text" name="date" value="${year+'年'+month+'月'+day+'日'}">
         </div>
         <div class="input-item"><button type="submit" data-index="${index}">更新</button></div>
         </form>`
         $task_detail.html(tpl)
-
     }
 
     function add_task(new_task) {
@@ -107,8 +137,10 @@
 
     function render_task_tpl(data, index) {
         if (!data || index === undefined) return '';
-        var list_item_tpl = ` <div class="task-item" data-index="${index}">
-        <span><input type="checkbox"></span>
+        var isCheck=data.complate
+        var str=isCheck ? 'checked':'';
+        var list_item_tpl = ` <div class="task-item ${str}" data-index="${index}">
+        <span><input ${str} data-index="${index}" type="checkbox" class="complete"></span>
         <span class="task-content">${data.content}</span>
         <span class="fr">
         <span class="anchor delete"> 删除</span>

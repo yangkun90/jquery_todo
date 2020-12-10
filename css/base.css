@@ -76,6 +76,7 @@ background-color: #5fb9e4;
     color: #333;
     margin-bottom: 2px;
     cursor: pointer;
+    position: relative;
 }
 .task-item:hover{
     background: #ddd;
@@ -127,4 +128,19 @@ background-color: #5fb9e4;
 }
 .anchor:hover{
     color: #333;
+}
+.task-item.checked::after{
+    content: '';
+    position: absolute;
+    text-decoration: line-through;
+    width: 90%;
+    height: 2px;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #000;
+}
+/* 修改confirm的样式 */
+.jconfirm.jconfirm-supervan .jconfirm-box div.jconfirm-content{
+    overflow-y: hidden;
 }
