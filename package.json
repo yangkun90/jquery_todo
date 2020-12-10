@@ -1,0 +1,23 @@
+{
+  "name": "yk_todo",
+  "version": "1.0.0",
+  "description": "jquery 版本 todo",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "jquery",
+    "todo"
+  ],
+  "author": "yangkun",
+  "license": "ISC",
+  "dependencies": {
+    "jquery": "^1.12.4",
+    "normalize.css": "^8.0.1",
+    "store": "^2.0.12"
+  }
+}
